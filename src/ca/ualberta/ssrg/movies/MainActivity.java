@@ -1,6 +1,7 @@
 package ca.ualberta.ssrg.movies;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import android.app.Activity;
@@ -87,6 +88,11 @@ public class MainActivity extends Activity {
 
 		// Refresh the list when visible
 		// TODO: Search all
+		//movies.clear();
+		Thread thread =new SearchThread("");
+		thread.start();
+		//movieManager.searchMovies("", null);
+		
 		
 	}
 
@@ -100,6 +106,12 @@ public class MainActivity extends Activity {
 		// TODO: Extract search query from text view
 		
 		// TODO: Run the search thread
+		EditText et = (EditText) view.findViewById(R.id.editText1);
+		if (et!=null) {
+			String s = et.getText().toString();
+			Thread thread =new SearchThread(s);
+			thread.start();
+		}
 		
 	}
 	
@@ -125,7 +137,17 @@ public class MainActivity extends Activity {
 
 
 	class SearchThread extends Thread {
-		// TODO: Implement search thread
+		private String search;
+		
+		public SearchThread(String s) {
+			search = s;
+		}
+		
+		public void run() {
+			movies.clear();
+			movies.addAll(movieManager.searchMovies(search , null));
+			runOnUiThread(doUpdateGUIList);
+		}
 		
 	}
 
